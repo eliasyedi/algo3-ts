@@ -14,16 +14,12 @@ public class TestBufferGap {
         bufferGap.insertar('L');
         System.out.println(bufferGap);
         bufferGap.insertar('A');
-        bufferGap.printRawArray();
         System.out.println(bufferGap);
 
-        bufferGap.printRawArray();
         bufferGap.moverCursor(-2);
-        bufferGap.printRawArray();
         System.out.println(bufferGap);
 
         bufferGap.insertar('X');
-        bufferGap.printRawArray();
         System.out.println(bufferGap);
         bufferGap.get(4);
         System.out.println(bufferGap);

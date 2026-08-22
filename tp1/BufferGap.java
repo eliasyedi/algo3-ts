@@ -1,6 +1,6 @@
 import java.util.Iterator;
- 
-public class BufferGap<E> implements Iterable<E>{
+
+public class BufferGap<E> implements Iterable<E> {
 
     private E[] datos;
 
@@ -11,7 +11,7 @@ public class BufferGap<E> implements Iterable<E>{
     private long desplazamientos;
 
     private static final int TAM_INICIAL = 16;
- 
+
     public BufferGap() {
 
         this.datos = (E[]) new Object[TAM_INICIAL];
@@ -51,8 +51,8 @@ public class BufferGap<E> implements Iterable<E>{
         finHueco = 3
 
      */
- 
- 
+
+
     //                                       [----hueco----]
 
     //hay que desplazar me imagino //[h,o,l,a,,,,,,,,,,,,,,]
@@ -72,47 +72,40 @@ public class BufferGap<E> implements Iterable<E>{
         this.datos[inicioHueco++] = obj;
 
     }
- 
+
     //todo implementar un rezise barraco aca
 
     private void resize() {
 
-        E[] newArray = (E[]) new Object[this.datos.length + TAM_INICIAL];
+        //todos los elementos son fisicamente movidos
+        this.desplazamientos += size();
+
+        E[] newArray = (E[]) new Object[this.datos.length * 2];
 
         for (int i = 0; i < this.inicioHueco; i++) {
-
             newArray[i] = this.datos[i];
-
         }
- 
- 
+
+
         //finHueco - 1 nunca puede ser negativo
-
         //hay que empujar al fin del nuevo array copiar de atras a adelante puede funcionar o
-
         //probablemente hace la suma del offset
+        int newFinHueco = newArray.length - (size() - this.inicioHueco);
 
-        int sizeAfterHueco = this.datos.length - this.finHueco;
 
-        for (int i = this.finHueco, j = newArray.length - sizeAfterHueco - 1; i < this.datos.length; i++, j++) {
-
+        for (int i = this.finHueco, j = newFinHueco; i < this.datos.length; i++, j++) {
             newArray[j] = this.datos[i];
-
         }
+        this.finHueco = newFinHueco;
 
         this.datos = newArray;
 
     }
- 
- 
+
+
     /**
-
-     *
-
      * @return elemento borrado
-
      * @throws BufferVacioException exception lanzada si el cursor se encuentra en posicion 0
-
      */
 
     public E borrar() throws BufferVacioException {
@@ -126,25 +119,42 @@ public class BufferGap<E> implements Iterable<E>{
         return target;
 
     }
- 
- 
+
+
     //negativo hacia la izquierda, positivo hacia la derecha
 
     //lanza una exception no chequeada si el lcursor quedaria fuera de [0,size()] eg. IndexOutOfBoundsException
 
     public void moverCursor(int delta) {
 
-        int preMove = inicioHueco + delta;
+        if (delta == 0) return;
 
-        if( preMove > size() || preMove < 0 ) throw new IndexOutOfBoundsException();
- 
- 
-        this.desplazamientos = Math.abs(delta);
- 
-        this.inicioHueco = preMove;
+        int absDelta = Math.abs(delta);
+        int preMoveInicioHueco = this.inicioHueco + delta;
+        int preMoveFinHueco = this.finHueco + delta;
+
+        //inicio hueco solo puede llegar a la ultima celda
+        // n -> tamanho de arreglo inicio hueco puede tomar valores [0,n-1] sin realizar un resize ih = n deberia
+        //triggerear un resize
+        if ((preMoveInicioHueco > size() || preMoveInicioHueco < 0)) throw new IndexOutOfBoundsException();
+
+        if (delta < 0) {
+            for (int i = 0; i < absDelta; i++) {
+                this.datos[finHueco - 1 - i] = this.datos[inicioHueco - 1 - i];
+                this.datos[inicioHueco - 1 - i] = null;
+            }
+        } else {
+            for (int i = 0; i < absDelta; i++) {
+                this.datos[inicioHueco + i] = this.datos[finHueco + i];
+                this.datos[finHueco + i] = null;
+            }
+        }
+        inicioHueco = preMoveInicioHueco;
+        finHueco = preMoveFinHueco;
+        this.desplazamientos += delta;
 
     }
- 
+
     //retorna la posicion del cursor
 
     public int posicionCursor() {
@@ -152,33 +162,33 @@ public class BufferGap<E> implements Iterable<E>{
         return this.inicioHueco;
 
     }
- 
- 
+
+
     //retorna el elemento en la posicion logica index mediante la formula de traduccion sin recorrer la estructura
 
     //note: probablemente if index > posicion de cursor sumarle el tamanho del hueco
 
     public E get(int index) {
 
-        if ( index > this.size() - 1 || index < 0) throw new IndexOutOfBoundsException();
- 
-        if ( index < inicioHueco) return this.datos[index];
+        if (index > this.size() - 1 || index < 0) throw new IndexOutOfBoundsException();
+
+        if (index < inicioHueco) return this.datos[index];
 
         int tamanhoHueco = this.finHueco - this.inicioHueco;
 
         return this.datos[tamanhoHueco + index];
 
     }
- 
- 
+
+
     //reemplaza el elemento en la posicion logica index y retorna el anterior. Lanza una exception no chequeada si index fuera de los limites
 
     //IndexOutOfBoundsException probably
 
     public E set(E obj, int index) {
 
-        if ( index > this.size() - 1 || index < 0) throw new IndexOutOfBoundsException();
- 
+        if (index > this.size() - 1 || index < 0) throw new IndexOutOfBoundsException();
+
         E anterior = this.datos[index];
 
         this.datos[index] = obj;
@@ -186,8 +196,8 @@ public class BufferGap<E> implements Iterable<E>{
         return anterior;
 
     }
- 
- 
+
+
     //retorna la cantidad de elementos guardados
 
     public int size() {
@@ -197,30 +207,30 @@ public class BufferGap<E> implements Iterable<E>{
         return this.datos.length - tamanhoHueco;
 
     }
- 
- 
+
+
     public int capacidad() {
 
         return datos.length;
 
     }
- 
- 
+
+
     //retorna el tamanho actual de desplazamientos
 
     public long desplazamientos() {
- 
+
         return this.desplazamientos;
 
     }
- 
- 
+
+
     public void reiniciarDesplazamientos() {
 
         this.desplazamientos = 0;
 
     }
- 
+
     @Override
 
     public Iterator<E> iterator() {
@@ -228,10 +238,10 @@ public class BufferGap<E> implements Iterable<E>{
         return new BufferIterator();
 
     }
- 
- 
-    private class BufferIterator implements Iterator<E>{
- 
+
+
+    private class BufferIterator implements Iterator<E> {
+
         private int index;
 
         private final E[] snapshot = datos;
@@ -240,7 +250,7 @@ public class BufferGap<E> implements Iterable<E>{
 
         private final int size = size();
 
-        public BufferIterator(){
+        public BufferIterator() {
 
             this.index = 0;
 
@@ -253,35 +263,31 @@ public class BufferGap<E> implements Iterable<E>{
             return index < size();
 
         }
- 
+
         @Override
 
         public E next() {
 
             E next = null;
 
-            if(index<inicioHueco)
-
+            if (index < inicioHueco)
                 return snapshot[index++];
 
-            return snapshot[huecoSize + index];
+            return snapshot[huecoSize + index++];
 
         }
 
     }
- 
- 
+
+
     @Override
-
     public String toString() {
-
-        //TODO devolver el contenido en orden logico con ``
 
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append('`');
 
-        for (E d : this){
+        for (E d : this) {
 
             stringBuilder.append(d);
 
@@ -292,37 +298,75 @@ public class BufferGap<E> implements Iterable<E>{
         return stringBuilder.toString();
 
     }
- 
-    public static void main(String[] args){
+
+
+    public void printRawArray() {
+        System.out.println("current capacity -> " + this.datos.length + " inicio, finHueco" + this.inicioHueco + "," + this.finHueco);
+        for (int i = 0; i < this.datos.length; i++) {
+            System.out.println(this.datos[i]);
+        }
+    }
+
+    public static void main(String[] args) {
 
         BufferGap<Character> buff = new BufferGap<>();
 
         buff.insertar('e');
-
         buff.insertar('l');
-
         buff.insertar('i');
-
         buff.insertar('a');
-
         buff.insertar('s');
+        buff.insertar(' ');
+        buff.insertar('r');
+        buff.insertar('u');
+        buff.insertar('b');
+        buff.insertar('e');
+        buff.insertar('n');
+        buff.insertar(' ');
+        buff.insertar('o');
+        buff.insertar('l');
+        buff.insertar('m');
+        buff.insertar('e');
+        buff.insertar('d');
+        buff.insertar('o');
+        buff.insertar(' ');
+        buff.insertar('e');
+        buff.insertar('c');
+        buff.insertar('h');
+        buff.insertar('e');
+        buff.insertar('v');
+        buff.insertar('e');
+        buff.insertar('r');
+        buff.insertar('r');
+        buff.insertar('i');
+        buff.insertar('a');
 
 
         System.out.println(buff);
+        buff.printRawArray();
+        buff.moverCursor(-1);
+        buff.printRawArray();
+        buff.moverCursor(1);
+        buff.printRawArray();
+        buff.moverCursor(-4);
+        buff.printRawArray();
+
+//        buff.resize();
+//        buff.printRawArray();
 
     }
- 
+
 }
- 
- 
+
+
 class BufferVacioException extends Exception {
- 
+
     public BufferVacioException() {
 
         super();
 
     }
- 
+
     public BufferVacioException(String message) {
 
         super(message);

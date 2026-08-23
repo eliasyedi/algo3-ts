@@ -114,7 +114,9 @@ public class BufferGap<E> implements Iterable<E> {
 
         E target = this.datos[this.inicioHueco - 1];
 
-        this.datos[this.inicioHueco - 1] = null;
+        //no necesario, podemos solo desplazar el inicio huevo
+//        this.datos[this.inicioHueco - 1] = null;
+        inicioHueco --;
 
         return target;
 

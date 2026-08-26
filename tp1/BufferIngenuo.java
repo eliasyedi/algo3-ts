@@ -1,6 +1,6 @@
 import java.util.Iterator;
 
-public class BufferGapIngenuo<E> implements Iterable<E> {
+public class BufferIngenuo<E> implements Iterable<E> {
 
     private E[] datos;
 
@@ -12,7 +12,7 @@ public class BufferGapIngenuo<E> implements Iterable<E> {
 
     private static final int TAM_INICIAL = 16;
 
-    public BufferGapIngenuo() {
+    public BufferIngenuo() {
         this.datos = (E[]) new Object[TAM_INICIAL];
         this.desplazamientos = 0;
         this.cursor = 0;

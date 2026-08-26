@@ -176,7 +176,7 @@ public class BufferGap<E> implements Iterable<E> {
         }
         inicioHueco = preMoveInicioHueco;
         finHueco = preMoveFinHueco;
-        this.desplazamientos += delta;
+        this.desplazamientos += absDelta;
 
     }
 
@@ -212,10 +212,15 @@ public class BufferGap<E> implements Iterable<E> {
     public E set(E obj, int index) {
 
         if (index > this.size() - 1 || index < 0) throw new PosicionInvalidaException();
-
-        E anterior = this.datos[index];
-
-        this.datos[index] = obj;
+        E anterior = null;
+        if (index < inicioHueco) {
+            anterior = this.datos[index];
+            this.datos[index] = obj;
+            return anterior;
+        }
+        int huecoSize = finHueco - inicioHueco;
+        anterior = this.datos[huecoSize + index];
+        this.datos[huecoSize + index] = obj;
 
         return anterior;
 

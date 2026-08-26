@@ -127,7 +127,7 @@ public class BufferGap<E> implements Iterable<E> {
 
     //negativo hacia la izquierda, positivo hacia la derecha
 
-    //lanza una exception no chequeada si el lcursor quedaria fuera de [0,size()] eg. IndexOutOfBoundsException
+    //lanza una exception no chequeada si el lcursor quedaria fuera de [0,size()]
 
     public void moverCursor(int delta) {
 
@@ -140,7 +140,7 @@ public class BufferGap<E> implements Iterable<E> {
         //inicio hueco solo puede llegar a la ultima celda
         // n -> tamanho de arreglo inicio hueco puede tomar valores [0,n-1] sin realizar un resize ih = n deberia
         //triggerear un resize
-        if ((preMoveInicioHueco > size() || preMoveInicioHueco < 0)) throw new IndexOutOfBoundsException();
+        if ((preMoveInicioHueco > size() || preMoveInicioHueco < 0)) throw new PosicionInvalidaException();
 
         if (delta < 0) {
             for (int i = 0; i < absDelta; i++) {
@@ -174,7 +174,7 @@ public class BufferGap<E> implements Iterable<E> {
 
     public E get(int index) {
 
-        if (index > this.size() - 1 || index < 0) throw new IndexOutOfBoundsException();
+        if (index > this.size() - 1 || index < 0) throw new PosicionInvalidaException();
 
         if (index < inicioHueco) return this.datos[index];
 
@@ -187,7 +187,6 @@ public class BufferGap<E> implements Iterable<E> {
 
     //reemplaza el elemento en la posicion logica index y retorna el anterior. Lanza una exception no chequeada si index fuera de los limites
 
-    //IndexOutOfBoundsException probably
 
     public E set(E obj, int index) {
 

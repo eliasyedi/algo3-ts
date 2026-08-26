@@ -323,8 +323,9 @@ public class BufferGap<E> implements Iterable<E> {
             if (i == posicionCursor()) stringBuilder.append("|");
             stringBuilder.append(d);
             i++;
-
         }
+
+        if (size() == posicionCursor()) stringBuilder.append("|");
 
         stringBuilder.append('`');
 

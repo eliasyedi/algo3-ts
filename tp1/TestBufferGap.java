@@ -155,7 +155,7 @@ public class TestBufferGap {
 
             long desplazamientosGap = bufferGap.desplazamientos();
 
-            BufferGapIngenuo<Character> ingenuo = new BufferGapIngenuo<>();
+            BufferIngenuo<Character> ingenuo = new BufferIngenuo<>();
 
             for (int i = 0; i < n; i++) {
                 ingenuo.insertar((char) ('a' + (i % 26)));

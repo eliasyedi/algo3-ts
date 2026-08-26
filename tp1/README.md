@@ -52,4 +52,6 @@ java -cp out TestBufferGap  # Ejercicio 1: traza, 100k aleatorios, tabla de desp
 java -cp out TestHistorial  # Ejercicio 2: traza obligatoria de deshacer/rehacer
 ```
 
+O con el script incluido: `chmod +x run.sh && ./run.sh [buffer|historial|all|clean]`
+
 Windows (PowerShell): `javac -d out (Get-ChildItem *.java)`

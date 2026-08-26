@@ -1,6 +1,27 @@
+/*
+ * =====================================================================
+ * Algoritmos y Estructura de Datos III - Anho 2026, 2do Periodo
+ * Trabajo Practico 1 - U1 (POO y TAD en Java)
+ *
+ * Grupo: g_ts5                                          Seccion: TS
+ *
+ * Integrantes:
+ *   - Figueredo Pistilli, Aurelio        - CIC: 4.010.315 - Seccion: TS
+ *   - Olmedo Echeverria, Elias Ruben     - CIC: 4.653.503 - Seccion: TS
+ *
+ * Tarea:
+ *   Ejercicio 2 - PilaES<E>: pila enlazada generica propia (apilar, desapilar, tope, estaVacia, size) con Nodo como inner class privada.
+ *
+ * ---------------------------------------------------------------------
+ * DECLARACION DE HONOR
+ *   [PENDIENTE] Pegar aqui el texto exacto de la Declaracion de Honor
+ *   entregado en la primera clase.
+ * =====================================================================
+ */
+
 public class PilaES<T> implements LIFO<T> {
 
-    private Node<T> topNode = null;
+    private Nodo<T> topNode = null;
     private int size = 0;
 
     public PilaES() {
@@ -10,7 +31,7 @@ public class PilaES<T> implements LIFO<T> {
 
     @Override
     public void apilar(T value) {
-        Node<T> newNode = new Node<T>(value, topNode);
+        Nodo<T> newNode = new Nodo<T>(value, topNode);
         topNode = newNode;
         size++;
     }
@@ -21,7 +42,7 @@ public class PilaES<T> implements LIFO<T> {
             throw new IllegalStateException("La pila está vacía");
         }
 
-        Node<T> popNode = topNode;
+        Nodo<T> popNode = topNode;
         this.topNode = popNode.getNextNode();
         this.size--;
         return popNode.getValue();
@@ -44,36 +65,34 @@ public class PilaES<T> implements LIFO<T> {
     public int size() {
         return size;
     }
+
+    private static class Nodo<T> {
+
+        private T value;
+        private Nodo<T> nextNode;
+
+        public Nodo(T value, Nodo<T> nextNode) {
+            this.value = value;
+            this.nextNode = nextNode;
+        }
+
+        public Nodo<T> getNextNode() {
+            return nextNode;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+        public void setNextNode(Nodo<T> nextNode) {
+            this.nextNode = nextNode;
+        }
+
+        public T getValue() {
+            return value;
+        }
+    }
 }
-
-class Node<T> {
-
-    private T value;
-    private Node<T> nextNode;
-
-    public Node(T value, Node<T> nextNode) {
-        this.value = value;
-        this.nextNode = nextNode;
-    }
-
-    public Node<T> getNextNode() {
-        return nextNode;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public void setNextNode(Node<T> nextNode) {
-        this.nextNode = nextNode;
-    }
-
-    public T getValue() {
-        return value;
-    }
-}
-
-
 
 interface LIFO<T> {
     void apilar(T value);

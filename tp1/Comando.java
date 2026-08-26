@@ -1,3 +1,24 @@
+/*
+ * =====================================================================
+ * Algoritmos y Estructura de Datos III - Anho 2026, 2do Periodo
+ * Trabajo Practico 1 - U1 (POO y TAD en Java)
+ *
+ * Grupo: g_ts5                                          Seccion: TS
+ *
+ * Integrantes:
+ *   - Figueredo Pistilli, Aurelio        - CIC: 4.010.315 - Seccion: TS
+ *   - Olmedo Echeverria, Elias Ruben     - CIC: 4.653.503 - Seccion: TS
+ *
+ * Tarea:
+ *   Ejercicio 2 - Interface Comando y los comandos concretos ComandoInsertar, ComandoBorrar y ComandoMoverCursor, cada uno con el estado minimo para revertirse.
+ *
+ * ---------------------------------------------------------------------
+ * DECLARACION DE HONOR
+ *   [PENDIENTE] Pegar aqui el texto exacto de la Declaracion de Honor
+ *   entregado en la primera clase.
+ * =====================================================================
+ */
+
 public interface Comando {
     void ejecutar();
     void deshacer();
@@ -29,7 +50,7 @@ class ComandoBorrar implements Comando {
 
     @Override
     public String descripcion() {
-        return "";
+        return character == null ? "Borrar()" : "Borrar('" + character + "')";
     }
 }
 
@@ -59,7 +80,7 @@ class ComandoInsertar implements Comando {
 
     @Override
     public String descripcion() {
-        return "";
+        return "Insertar('" + character + "')";
     }
 }
 
@@ -86,7 +107,7 @@ class ComandoMoverCursor implements Comando {
 
     @Override
     public String descripcion() {
-        return "";
+        return "MoverCursor(" + delta + ")";
     }
 }
 

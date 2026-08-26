@@ -1,3 +1,24 @@
+/*
+ * =====================================================================
+ * Algoritmos y Estructura de Datos III - Anho 2026, 2do Periodo
+ * Trabajo Practico 1 - U1 (POO y TAD en Java)
+ *
+ * Grupo: g_ts5                                          Seccion: TS
+ *
+ * Integrantes:
+ *   - Figueredo Pistilli, Aurelio        - CIC: 4.010.315 - Seccion: TS
+ *   - Olmedo Echeverria, Elias Ruben     - CIC: 4.653.503 - Seccion: TS
+ *
+ * Tarea:
+ *   Ejercicio 2 - Clase de prueba: reproduce la traza obligatoria de 12 pasos de deshacer/rehacer del enunciado.
+ *
+ * ---------------------------------------------------------------------
+ * DECLARACION DE HONOR
+ *   [PENDIENTE] Pegar aqui el texto exacto de la Declaracion de Honor
+ *   entregado en la primera clase.
+ * =====================================================================
+ */
+
 public class TestHistorial {
 
     public static void main(String[] args) {

@@ -1,3 +1,24 @@
+/*
+ * =====================================================================
+ * Algoritmos y Estructura de Datos III - Anho 2026, 2do Periodo
+ * Trabajo Practico 1 - U1 (POO y TAD en Java)
+ *
+ * Grupo: g_ts5                                          Seccion: TS
+ *
+ * Integrantes:
+ *   - Figueredo Pistilli, Aurelio        - CIC: 4.010.315 - Seccion: TS
+ *   - Olmedo Echeverria, Elias Ruben     - CIC: 4.653.503 - Seccion: TS
+ *
+ * Tarea:
+ *   Ejercicio 1 - Version ingenua del buffer (insertar desplazando todo el arreglo a la derecha), usada como linea base para la tabla comparativa de desplazamientos.
+ *
+ * ---------------------------------------------------------------------
+ * DECLARACION DE HONOR
+ *   [PENDIENTE] Pegar aqui el texto exacto de la Declaracion de Honor
+ *   entregado en la primera clase.
+ * =====================================================================
+ */
+
 import java.util.Iterator;
 
 public class BufferGapIngenuo<E> implements Iterable<E> {

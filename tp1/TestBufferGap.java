@@ -1,3 +1,24 @@
+/*
+ * =====================================================================
+ * Algoritmos y Estructura de Datos III - Anho 2026, 2do Periodo
+ * Trabajo Practico 1 - U1 (POO y TAD en Java)
+ *
+ * Grupo: g_ts5                                          Seccion: TS
+ *
+ * Integrantes:
+ *   - Figueredo Pistilli, Aurelio        - CIC: 4.010.315 - Seccion: TS
+ *   - Olmedo Echeverria, Elias Ruben     - CIC: 4.653.503 - Seccion: TS
+ *
+ * Tarea:
+ *   Ejercicio 1 - Clase de prueba: reproduce la traza del enunciado, verifica 100.000 caracteres aleatorios con for-each y genera la tabla de desplazamientos.
+ *
+ * ---------------------------------------------------------------------
+ * DECLARACION DE HONOR
+ *   [PENDIENTE] Pegar aqui el texto exacto de la Declaracion de Honor
+ *   entregado en la primera clase.
+ * =====================================================================
+ */
+
 import java.util.Random;
 
 public class TestBufferGap {
@@ -7,25 +28,41 @@ public class TestBufferGap {
 
         BufferGap<Character> bufferGap = new BufferGap<>();
 
+        imprimirEncabezado();
+        imprimirEstado("(inicial)", bufferGap);
+
         bufferGap.insertar('H');
-        System.out.println(bufferGap);
+        imprimirEstado("insertar('H')", bufferGap);
         bufferGap.insertar('O');
-        System.out.println(bufferGap);
+        imprimirEstado("insertar('O')", bufferGap);
         bufferGap.insertar('L');
-        System.out.println(bufferGap);
+        imprimirEstado("insertar('L')", bufferGap);
         bufferGap.insertar('A');
-        System.out.println(bufferGap);
+        imprimirEstado("insertar('A')", bufferGap);
 
         bufferGap.moverCursor(-2);
-        System.out.println(bufferGap);
+        imprimirEstado("moverCursor(-2)", bufferGap);
 
         bufferGap.insertar('X');
-        System.out.println(bufferGap);
+        imprimirEstado("insertar('X')", bufferGap);
         bufferGap.get(4);
-        System.out.println(bufferGap);
+        imprimirEstado("get(4)", bufferGap);
         bufferGap.borrar();
-        System.out.println(bufferGap);
+        imprimirEstado("borrar()", bufferGap);
 
+    }
+
+    private static void imprimirEncabezado() {
+        System.out.printf("%-16s | %-12s | %-11s | %-8s | %-9s | %s%n",
+                "Operación", "Contenido", "inicioHueco", "finHueco", "capacidad", "desplazamientos");
+        System.out.println("-----------------------------------------------------------------------------------------");
+    }
+
+    private static void imprimirEstado(String operacion, BufferGap<Character> b) {
+        int inicioHueco = b.posicionCursor();
+        int finHueco = inicioHueco + b.capacidad() - b.size();
+        System.out.printf("%-16s | %-12s | %-11d | %-8d | %-9d | %d%n",
+                operacion, b.toString(), inicioHueco, finHueco, b.capacidad(), b.desplazamientos());
     }
 
     //2

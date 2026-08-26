@@ -1,4 +1,5 @@
 // GR
+
 import java.util.Iterator;
 
 public class BufferGap<E> implements Iterable<E> {
@@ -117,7 +118,7 @@ public class BufferGap<E> implements Iterable<E> {
 
         //no necesario, podemos solo desplazar el inicio huevo
 //        this.datos[this.inicioHueco - 1] = null;
-        inicioHueco --;
+        inicioHueco--;
 
         return target;
 
@@ -290,9 +291,13 @@ public class BufferGap<E> implements Iterable<E> {
 
         stringBuilder.append('`');
 
+        int i = 0;
         for (E d : this) {
 
+
+            if (i == posicionCursor()) stringBuilder.append("|");
             stringBuilder.append(d);
+            i++;
 
         }
 
@@ -362,6 +367,8 @@ public class BufferGap<E> implements Iterable<E> {
 }
 
 
+//un comportamiento que puede ocurrir y debe ser tratado,
+// como realizar un backspace y ya tener el buffer vacio
 class BufferVacioException extends Exception {
 
     public BufferVacioException() {
@@ -374,6 +381,22 @@ class BufferVacioException extends Exception {
 
         super(message);
 
+    }
+
+}
+
+//es de este tipo porque el usuario deberia de saber los constraints del buffer
+//si trata de acceder un indice fuera de lugar este deberia indicarle que es una operacion invalida
+//seria mas de un error del que llama y deberia de tener en cuenta
+class PosicionInvalidaException extends RuntimeException {
+
+
+    public PosicionInvalidaException() {
+        super();
+    }
+
+    public PosicionInvalidaException(String message) {
+        super(message);
     }
 
 }

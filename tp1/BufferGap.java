@@ -1,5 +1,3 @@
-// GR
-
 import java.util.Iterator;
 
 public class BufferGap<E> implements Iterable<E> {
@@ -190,7 +188,7 @@ public class BufferGap<E> implements Iterable<E> {
 
     public E set(E obj, int index) {
 
-        if (index > this.size() - 1 || index < 0) throw new IndexOutOfBoundsException();
+        if (index > this.size() - 1 || index < 0) throw new PosicionInvalidaException();
 
         E anterior = this.datos[index];
 

@@ -14,14 +14,21 @@
  *
  * ---------------------------------------------------------------------
  * DECLARACION DE HONOR
- *   [PENDIENTE] Pegar aqui el texto exacto de la Declaracion de Honor
- *   entregado en la primera clase.
+ *   Nosotros, Aurelio Figueredo Pistilli y Elias Ruben Olmedo Echeverria:
+ *
+ *   - No hemos discutido el codigo fuente de nuestra tarea con ningun otro
+ *     grupo, solo con el Profesor o el AER.
+ *   - No hemos usado codigo obtenido de otro estudiante o de cualquier otra
+ *     fuente no autorizada, modificada o no modificada.
+ *   - Cualquier codigo o documentacion utilizada en nuestro programa obtenido
+ *     de fuentes, tales como libros o notas de curso, ha sido claramente
+ *     indicada en nuestra tarea.
  * =====================================================================
  */
 
 public interface Comando {
-    void ejecutar();
-    void deshacer();
+    void ejecutar() throws BufferVacioException;
+    void deshacer() throws BufferVacioException;
     String descripcion();
 }
 
@@ -35,12 +42,8 @@ class ComandoBorrar implements Comando {
     }
 
     @Override
-    public void ejecutar() {
-        try {
-            character = bufferGap.borrar();
-        } catch (BufferVacioException e) {
-            throw new RuntimeException(e);
-        }
+    public void ejecutar() throws BufferVacioException {
+        character = bufferGap.borrar();
     }
 
     @Override
@@ -70,12 +73,8 @@ class ComandoInsertar implements Comando {
     }
 
     @Override
-    public void deshacer() {
-        try {
-            bufferGap.borrar();
-        } catch (BufferVacioException e) {
-
-        }
+    public void deshacer() throws BufferVacioException {
+        bufferGap.borrar();
     }
 
     @Override

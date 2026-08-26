@@ -16,8 +16,15 @@
  *
  * ---------------------------------------------------------------------
  * DECLARACION DE HONOR
- *   [PENDIENTE] Pegar aqui el texto exacto de la Declaracion de Honor
- *   entregado en la primera clase.
+ *   Nosotros, Aurelio Figueredo Pistilli y Elias Ruben Olmedo Echeverria:
+ *
+ *   - No hemos discutido el codigo fuente de nuestra tarea con ningun otro
+ *     grupo, solo con el Profesor o el AER.
+ *   - No hemos usado codigo obtenido de otro estudiante o de cualquier otra
+ *     fuente no autorizada, modificada o no modificada.
+ *   - Cualquier codigo o documentacion utilizada en nuestro programa obtenido
+ *     de fuentes, tales como libros o notas de curso, ha sido claramente
+ *     indicada en nuestra tarea.
  * =====================================================================
  */
 
@@ -46,35 +53,6 @@ public class BufferGap<E> implements Iterable<E> {
         this.finHueco = TAM_INICIAL;
 
     }
- 
-    /*
-
-    TODO check this out my duuuuude tamanhoHueco = finHueco-inicioHueco
-
-        ej = TAM_INICIAL = 4
-
-        insertas H
-
-        H _ _ _
-
-        inicioHueco = 1
-
-        finHueco = 4
-
-        tamanho = 3
-
-        size() = capacidad - tamanhoHueco
-
-        meeaniiing size() = datos.lenght - tamanhoHueco;
-
-        H _ _ A
-
-        inicioHueco = 1
-
-        finHueco = 3
-
-     */
-
 
     //                                       [----hueco----]
 
@@ -95,8 +73,6 @@ public class BufferGap<E> implements Iterable<E> {
         this.datos[inicioHueco++] = obj;
 
     }
-
-    //todo implementar un rezise barraco aca
 
     private void resize() {
 
@@ -147,7 +123,6 @@ public class BufferGap<E> implements Iterable<E> {
 
 
     //negativo hacia la izquierda, positivo hacia la derecha
-
     //lanza una exception no chequeada si el lcursor quedaria fuera de [0,size()]
 
     public void moverCursor(int delta) {
@@ -181,7 +156,6 @@ public class BufferGap<E> implements Iterable<E> {
     }
 
     //retorna la posicion del cursor
-
     public int posicionCursor() {
 
         return this.inicioHueco;
@@ -190,7 +164,6 @@ public class BufferGap<E> implements Iterable<E> {
 
 
     //retorna el elemento en la posicion logica index mediante la formula de traduccion sin recorrer la estructura
-
     //note: probablemente if index > posicion de cursor sumarle el tamanho del hueco
 
     public E get(int index) {
@@ -207,7 +180,6 @@ public class BufferGap<E> implements Iterable<E> {
 
 
     //reemplaza el elemento en la posicion logica index y retorna el anterior. Lanza una exception no chequeada si index fuera de los limites
-
 
     public E set(E obj, int index) {
 
@@ -228,7 +200,6 @@ public class BufferGap<E> implements Iterable<E> {
 
 
     //retorna la cantidad de elementos guardados
-
     public int size() {
 
         int tamanhoHueco = this.finHueco - this.inicioHueco;
@@ -246,7 +217,6 @@ public class BufferGap<E> implements Iterable<E> {
 
 
     //retorna el tamanho actual de desplazamientos
-
     public long desplazamientos() {
 
         return this.desplazamientos;
@@ -384,10 +354,6 @@ public class BufferGap<E> implements Iterable<E> {
         buff.printRawArray();
         buff.moverCursor(-4);
         buff.printRawArray();
-
-//        buff.resize();
-//        buff.printRawArray();
-
     }
 
 }

@@ -1,0 +1,20 @@
+/*
+ * =====================================================================
+ * Algoritmos y Estructura de Datos III - Año 2026, 2do Período
+ * Trabajo Práctico 1 - U1 (POO y TAD en Java)
+ *
+ * Grupo: g_tX##                 <-- reemplazar por el ID real (ej. g_tq03)
+ *
+ * Integrantes:
+ *   - Apellido, Nombre - CIC: 0.000.000 - Sección: X
+ *   - Apellido, Nombre - CIC: 0.000.000 - Sección: X
+ *   - Apellido, Nombre - CIC: 0.000.000 - Sección: X
+ *
+ * Tarea: <Ejercicio 1 / Ejercicio 2 - qué parte hizo el grupo en este archivo>
+ *
+ * ---------------------------------------------------------------------
+ * DECLARACIÓN DE HONOR
+ * <pegar acá el texto exacto de la Declaración de Honor dado en la
+ *  primera clase - el enunciado exige el texto tal cual>
+ * =====================================================================
+ */

@@ -2,7 +2,7 @@ package tp2;
 
 import java.util.Iterator;
 
-public class ABBAumentado<K extends Comparable<? super K>, V> {
+public class ABBAumentado<K extends Comparable<? super K>, V> implements Iterable<K> {
     private Nodo<K, V> raiz;
     private long visitas;
 
@@ -14,12 +14,14 @@ public class ABBAumentado<K extends Comparable<? super K>, V> {
         K clave;
         V valor;
         int tamanho;
+        int altura;
 
 
         public Nodo(K clave, V valor) {
             this.clave = clave;
             this.valor = valor;
             this.tamanho = 1;
+            this.altura = 0;
         }
 
         public K clave() {
@@ -62,31 +64,32 @@ tamaños. Lanza ClaveNulaException si clave es null.
 
         boolean inserted = false;
         while (!inserted) {
-
-            if (actual.clave.equals(clave)) {
-                actual.valor = valor;
-                inserted = true;
-            } else if (clave.compareTo(actual.clave) > 0) {
-                previo = actual;
-                actual.tamanho = actual.tamanho + 1;
-                actual = actual.der;
-            } else {
-                previo = actual;
-                actual.tamanho = actual.tamanho + 1;
-                actual = actual.izq;
-            }
-
             if (actual == null) {
+                //insertar
                 if (clave.compareTo(previo.clave) > 0) {
                     previo.der = nodo;
                     nodo.padre = previo;
-                    inserted = true;
                 } else {
                     previo.izq = nodo;
                     nodo.padre = previo;
-                    inserted = true;
                 }
+                inserted = true;
+                //actualizar antecesores
+                actualizarAntecesores(nodo);
+            } else if (actual.clave.equals(clave)) {
+                this.visitas++;
+                actual.valor = valor;
+                inserted = true;
+            } else if (clave.compareTo(actual.clave) > 0) {
+                this.visitas++;
+                previo = actual;
+                actual = actual.der;
+            } else {
+                this.visitas++;
+                previo = actual;
+                actual = actual.izq;
             }
+
         }
 
     }
@@ -103,10 +106,12 @@ ClaveNulaException si es null.
         if (this.raiz == null) throw new ClaveInexistenteException();
 
         Nodo<K, V> actual = this.raiz;
-        Nodo<K, V> previo = null;
 
-        while (actual != null && !clave.equals(actual.clave)) {
-            previo = actual;
+        while (actual != null ){
+            this.visitas++;
+            if(clave.equals(actual.clave)) {
+                break;
+            }
             if (clave.compareTo(actual.clave) > 0) {
                 actual = actual.der;
             } else {
@@ -184,15 +189,18 @@ ClaveNulaException si es null.
         Nodo<K, V> nodoAuxiliar = nodoPartida;
         while (nodoAuxiliar != null) {
             nodoAuxiliar.tamanho = 1;
-            if (nodoAuxiliar.izq != null)
+            if (nodoAuxiliar.izq != null) {
                 nodoAuxiliar.tamanho = nodoAuxiliar.tamanho + nodoAuxiliar.izq.tamanho;
-            if (nodoAuxiliar.der != null)
+            }
+            if (nodoAuxiliar.der != null) {
                 nodoAuxiliar.tamanho = nodoAuxiliar.tamanho + nodoAuxiliar.der.tamanho;
+            }
+            nodoAuxiliar.altura = 1 + Math.max(altura(nodoAuxiliar.izq), altura(nodoAuxiliar.der));
+            this.visitas++;
             nodoAuxiliar = nodoAuxiliar.padre;
         }
     }
 
-//    private Nodo<K,V> successorInOrder(Nodo<K,V>)
 
     //Retorna el valor. Lanza ClaveInexistenteException si
     //no está.
@@ -200,9 +208,10 @@ ClaveNulaException si es null.
         if (clave == null) throw new ClaveNulaException();
         Nodo<K, V> actual = this.raiz;
         while (actual != null) {
-            if(clave.equals(actual.clave) )  return actual.valor;
-            if(clave.compareTo(actual.clave)>0) actual = actual.der;
-            else  actual = actual.izq;
+            this.visitas++;
+            if (clave.equals(actual.clave)) return actual.valor;
+            if (clave.compareTo(actual.clave) > 0) actual = actual.der;
+            else actual = actual.izq;
         }
         throw new ClaveInexistenteException();
     }
@@ -212,26 +221,28 @@ ClaveNulaException si es null.
         if (clave == null) throw new ClaveNulaException();
         Nodo<K, V> actual = this.raiz;
         while (actual != null) {
-            if(clave.equals(actual.clave) )  return true;
-            if(clave.compareTo(actual.clave)>0) actual = actual.der;
-            else  actual = actual.izq;
+            this.visitas++;
+            if (clave.equals(actual.clave)) return true;
+            if (clave.compareTo(actual.clave) > 0) actual = actual.der;
+            else actual = actual.izq;
         }
         return false;
     }
 
 
     //[1,n] 1 minimo y el maximo posible es size()
-    public K kEsimo(int k) throws IndiceFueraDeRangoException{
+    public K kEsimo(int k) throws IndiceFueraDeRangoException {
         if (k < 1 || k > size()) throw new IndiceFueraDeRangoException();
 
         Nodo<K, V> actual = this.raiz;
         int l;
-        boolean found = false;
-        while(actual != null ) {
+        while (actual != null) {
+            this.visitas++;
             l = tamano(actual.izq);
-            if (k == l + 1) return actual.clave ;
-            else if (k <= l) actual = actual.izq;
-            else if (k > l+1) {
+            if (k == l + 1) return actual.clave;
+            else if (k <= l) {
+                actual = actual.izq;
+            } else if (k > l + 1) {
                 k = k - l - 1;
                 actual = actual.der;
             }
@@ -248,9 +259,10 @@ ClaveNulaException si es null.
         //size() - tamano de nodo limite
         int cuantosMenores = 0;
         while (actual != null) {
-            if (clave.compareTo(actual.clave)>= 0 ) actual = actual.izq;
+            this.visitas++;
+            if (clave.compareTo(actual.clave) <= 0) actual = actual.izq;
             else {
-                cuantosMenores = tamano(actual.izq) + 1;
+                cuantosMenores += tamano(actual.izq) + 1;
                 actual = actual.der;
             }
         }
@@ -258,27 +270,77 @@ ClaveNulaException si es null.
     }
 
 
+    //guess like tamanho de raiz menos tamanho de arbol izquierdo menos tamanho de arbol derecho
     public int consultarRango(K a, K b) {
+        if (a == null) throw new ClaveNulaException();
+        if (b == null) throw new ClaveNulaException();
+        if (a.compareTo(b) > 0) throw new RangoInvalidoException();
 
+        int menoresA = cuantosMenores(a);
+        int menoresB = cuantosMenores(b);
+
+        if (contiene(b)) {
+            menoresB++;
+        }
+        return menoresB - menoresA;
     }
 
 
     public int consultarRangoIngenuo(K a, K b) {
 
+        if (a == null) throw new ClaveNulaException();
+        if (b == null) throw new ClaveNulaException();
+        if (a.compareTo(b) > 0) throw new RangoInvalidoException();
+        int contadorIntervalo = 0;
+        for (K key : this) {
+            if (a.compareTo(key) <= 0 && b.compareTo(key) >= 0) contadorIntervalo++;
+        }
+        return contadorIntervalo;
     }
 
 
-    public int rango(K clave) {
+    public int rango(K clave) throws ClaveInexistenteException {
+        if (!contiene(clave)) throw new ClaveInexistenteException();
+        return cuantosMenores(clave) + 1;
 
     }
 
-    public K sucesor(K clave) {
+    public K sucesor(K clave) throws ClaveInexistenteException {
+        if (!contiene(clave)) throw new ClaveInexistenteException();
 
+        Nodo<K, V> actual = this.raiz;
+        Nodo<K, V> sucesor = null;
+        while (actual != null) {
+            if (clave.compareTo(actual.clave) < 0) {
+                sucesor = actual;
+                actual = actual.izq;
+                this.visitas++;
+            } else {
+                this.visitas++;
+                actual = actual.der;
+            }
+        }
+        return sucesor != null ? sucesor.clave : null;
     }
 
 
-    public K predecesor(K clave) {
+    public K predecesor(K clave) throws ClaveInexistenteException {
 
+        if (!contiene(clave)) throw new ClaveInexistenteException();
+
+        Nodo<K, V> actual = this.raiz;
+        Nodo<K, V> predecesor = null;
+        while (actual != null) {
+            if (clave.compareTo(actual.clave) > 0) {
+                this.visitas++;
+                predecesor = actual;
+                actual = actual.der;
+            } else {
+                this.visitas++;
+                actual = actual.izq;
+            }
+        }
+        return predecesor != null ? predecesor.clave : null;
     }
 
     private int tamano(Nodo<K, V> nodo) {
@@ -286,29 +348,96 @@ ClaveNulaException si es null.
     }
 
     public int size() {
-        return this.raiz.tamanho;
+        return tamano(this.raiz);
     }
 
     public int altura() {
-
+        return altura(this.raiz);
     }
 
 
     public long visitas() {
-
+        return this.visitas;
     }
 
     public void reiniciarVisitas() {
-
+        this.visitas = 0;
     }
 
     public boolean tamanosConsistentes() {
+        Nodo<K, V> actual = this.raiz;
+        Nodo<K, V>[] pila = (Nodo<K, V>[]) new Nodo[size()];
+        int tope = 0;
 
+        while (actual != null) {
+            pila[tope++] = actual;
+            actual = actual.izq;
+        }
+        //revisa invariante
+        while (tope > 0) {
+            actual = pila[--tope];
+            if (actual.tamanho != 1 + tamano(actual.izq) + tamano(actual.der)) return false;
+
+            actual = actual.der;
+            while (actual != null) {
+                pila[tope++] = actual;
+                actual = actual.izq;
+            }
+        }
+        return true;
     }
 
 
     public Iterator<K> iterator() {
+        return new ABBAumentadoIterator();
+    }
 
+
+    private class ABBAumentadoIterator implements Iterator<K> {
+
+
+        Nodo<K, V>[] pila;
+        int tope;
+
+        public ABBAumentadoIterator() {
+            pila = (Nodo<K, V>[]) new Nodo[size()];
+            tope = 0;
+            Nodo<K, V> actual = raiz;
+            while (actual != null) {
+                pila[tope++] = actual;
+                actual = actual.izq;
+            }
+        }
+
+        @Override
+
+        public boolean hasNext() {
+            return tope > 0;
+        }
+
+        @Override
+        public K next() {
+            //se podria validar que haya otro no? o tirar exception
+            Nodo<K, V> ret = pila[--tope];
+
+            //cargar lo que hay a la derecha en la pila
+            Nodo<K, V> actual = ret.der;
+
+            while (actual != null) {
+                pila[tope++] = actual;
+                actual = actual.izq;
+            }
+
+
+            return ret.clave;
+
+        }
+
+    }
+
+
+    private int altura(Nodo<K, V> nodo) {
+        return nodo == null ? -1 : nodo.altura;
     }
 
 

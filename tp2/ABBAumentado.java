@@ -1,4 +1,34 @@
-package tp2;
+/*
+ * =====================================================================
+ * Algoritmos y Estructura de Datos III - Anho 2026, 2do Periodo
+ * Trabajo Practico 2 - U2–U3 (Análisis, ABB y Tablas de Dispersión)
+ *
+ * Grupo: g_ts5                                          Seccion: TS
+ *
+ * Integrantes:
+ *   - Figueredo Pistilli, Aurelio        - CIC: 4.010.315 - Seccion: TS
+ *   - Olmedo Echeverria, Elias Ruben     - CIC: 4.653.503 - Seccion: TS
+ *
+ * Tarea:
+ *   Ejercicio 1 - ABBAumentado<K,V>: arbol binario de busqueda aumentado
+ *   con el campo tamano en cada nodo. kEsimo, cuantosMenores,
+ *   consultarRango y rango en O(h) bajando por un solo camino; eliminar
+ *   con mudanza del sucesor; sucesor/predecesor, Iterable, toString y
+ *   contador de visitas.
+ *
+ * ---------------------------------------------------------------------
+ * DECLARACION DE HONOR
+ *   Nosotros, Aurelio Figueredo Pistilli y Elias Ruben Olmedo Echeverria:
+ *
+ *   - No hemos discutido el codigo fuente de nuestra tarea con ningun otro
+ *     grupo, solo con el Profesor o el AER.
+ *   - No hemos usado codigo obtenido de otro estudiante o de cualquier otra
+ *     fuente no autorizada, modificada o no modificada.
+ *   - Cualquier codigo o documentacion utilizada en nuestro programa obtenido
+ *     de fuentes, tales como libros o notas de curso, ha sido claramente
+ *     indicada en nuestra tarea.
+ * =====================================================================
+ */
 
 import java.util.Iterator;
 
@@ -13,14 +43,14 @@ public class ABBAumentado<K extends Comparable<? super K>, V> implements Iterabl
         Nodo<K, V> der;
         K clave;
         V valor;
-        int tamanho;
+        int tamano;
         int altura;
 
 
         public Nodo(K clave, V valor) {
             this.clave = clave;
             this.valor = valor;
-            this.tamanho = 1;
+            this.tamano = 1;
             this.altura = 0;
         }
 
@@ -32,8 +62,8 @@ public class ABBAumentado<K extends Comparable<? super K>, V> implements Iterabl
             return this.valor;
         }
 
-        public int tamanho() {
-            return tamanho;
+        public int tamano() {
+            return tamano;
         }
 
     }
@@ -42,13 +72,6 @@ public class ABBAumentado<K extends Comparable<? super K>, V> implements Iterabl
     }
 
 
-    //todo
-    /*
-   Inserta el par. No se admiten claves duplicadas: cada
-clave ocupa un solo nodo, así que si la clave ya estaba
-reemplaza el valor y no cambia la estructura ni los
-tamaños. Lanza ClaveNulaException si clave es null.
-     */
     public void agregar(K clave, V valor) {
 
         if (clave == null) throw new ClaveNulaException();
@@ -188,12 +211,12 @@ ClaveNulaException si es null.
     private void actualizarAntecesores(final Nodo<K, V> nodoPartida) {
         Nodo<K, V> nodoAuxiliar = nodoPartida;
         while (nodoAuxiliar != null) {
-            nodoAuxiliar.tamanho = 1;
+            nodoAuxiliar.tamano = 1;
             if (nodoAuxiliar.izq != null) {
-                nodoAuxiliar.tamanho = nodoAuxiliar.tamanho + nodoAuxiliar.izq.tamanho;
+                nodoAuxiliar.tamano = nodoAuxiliar.tamano + nodoAuxiliar.izq.tamano;
             }
             if (nodoAuxiliar.der != null) {
-                nodoAuxiliar.tamanho = nodoAuxiliar.tamanho + nodoAuxiliar.der.tamanho;
+                nodoAuxiliar.tamano = nodoAuxiliar.tamano + nodoAuxiliar.der.tamano;
             }
             nodoAuxiliar.altura = 1 + Math.max(altura(nodoAuxiliar.izq), altura(nodoAuxiliar.der));
             this.visitas++;
@@ -231,7 +254,7 @@ ClaveNulaException si es null.
 
 
     //[1,n] 1 minimo y el maximo posible es size()
-    public K kEsimo(int k) throws IndiceFueraDeRangoException {
+    public K kEsimo(int k) {
         if (k < 1 || k > size()) throw new IndiceFueraDeRangoException();
 
         Nodo<K, V> actual = this.raiz;
@@ -293,6 +316,7 @@ ClaveNulaException si es null.
         if (a.compareTo(b) > 0) throw new RangoInvalidoException();
         int contadorIntervalo = 0;
         for (K key : this) {
+            this.visitas++;
             if (a.compareTo(key) <= 0 && b.compareTo(key) >= 0) contadorIntervalo++;
         }
         return contadorIntervalo;
@@ -344,7 +368,7 @@ ClaveNulaException si es null.
     }
 
     private int tamano(Nodo<K, V> nodo) {
-        return nodo == null ? 0 : nodo.tamanho;
+        return nodo == null ? 0 : nodo.tamano;
     }
 
     public int size() {
@@ -376,7 +400,7 @@ ClaveNulaException si es null.
         //revisa invariante
         while (tope > 0) {
             actual = pila[--tope];
-            if (actual.tamanho != 1 + tamano(actual.izq) + tamano(actual.der)) return false;
+            if (actual.tamano != 1 + tamano(actual.izq) + tamano(actual.der)) return false;
 
             actual = actual.der;
             while (actual != null) {
@@ -387,6 +411,40 @@ ClaveNulaException si es null.
         return true;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder salida = new StringBuilder();
+        Nodo<K, V>[] pila = (Nodo<K, V>[]) new Nodo[size()];
+        int tope = 0;
+        Nodo<K, V> actual = this.raiz;
+
+        while (actual != null) {
+            pila[tope++] = actual;
+            actual = actual.izq;
+        }
+        while (tope > 0) {
+            actual = pila[--tope];
+            if (salida.length() > 0) salida.append(" ");
+            salida.append(actual.clave).append("(").append(actual.tamano).append(")");
+
+            actual = actual.der;
+            while (actual != null) {
+                pila[tope++] = actual;
+                actual = actual.izq;
+            }
+        }
+        return salida.toString();
+    }
+
+    Nodo<K, V> obtenerNodo(K clave) {
+        Nodo<K, V> actual = this.raiz;
+        while (actual != null) {
+            if (clave.equals(actual.clave)) return actual;
+            if (clave.compareTo(actual.clave) > 0) actual = actual.der;
+            else actual = actual.izq;
+        }
+        return null;
+    }
 
     public Iterator<K> iterator() {
         return new ABBAumentadoIterator();
@@ -447,5 +505,3 @@ ClaveNulaException si es null.
 
 
 }
-
-

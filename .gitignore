@@ -2,3 +2,16 @@
 **/*.class
 out
 tp3/title.basics.tsv
+# Contexto local y enunciado: no se pushean
+CLAUDE.md
+TP3-U4-ArbolBMas.pdf
+.DS_Store
+**/.DS_Store
+
+# archivos de datos generados (no se entregan)
+*.dat
+
+# dataset de IMDb: no se entrega ni se versiona
+dataset/
+*.tsv
+*.tsv.gz
